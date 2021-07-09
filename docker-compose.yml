@@ -1,0 +1,53 @@
+version: '3'
+
+networks:
+  net:
+
+volumes:
+  influx_data: {}
+  grafana_data: {}
+
+services:
+  config:
+    build: .
+    volumes:
+      - .:/opt/stig:rw
+  influxdb:
+    image: "influxdb:1.8"
+    networks:
+      - net
+    ports:
+      - 8886:8086
+    volumes:
+      - influx_data:/var/lib/influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=upgrade
+      - DOCKER_INFLUXDB_INIT_USERNAME=stig
+      - DOCKER_INFLUXDB_INIT_PASSWORD=stigPass!
+      - DOCKER_INFLUXDB_INIT_ORG=stig
+      - DOCKER_INFLUXDB_INIT_BUCKET=stig
+  telegraf:
+    image: "telegraf"
+    networks:
+      - net
+    depends_on:
+      - config
+      - influxdb
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+  grafana:
+    image: "grafana/grafana"
+    networks:
+      - net
+    ports:
+      - "8080:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=stig
+      - GF_SECURITY_ADMIN_PASSWORD=stigPass!
+    depends_on:
+      - influxdb
+      - config
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards

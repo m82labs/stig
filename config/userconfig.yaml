@@ -1,0 +1,7 @@
+telegraf:
+  sql_plugin:
+    hosts:
+      - host: 192.168.86.45
+        port: 1433
+        username: telegraf
+        password: TelegrafPassword0!      

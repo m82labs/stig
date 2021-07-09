@@ -1,0 +1,10 @@
+apiVersion: 1
+datasources:
+  - name: STIG
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    password: stigPass!
+    user: stig
+    database: stig
+    editable: false

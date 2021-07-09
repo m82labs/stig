@@ -6,6 +6,12 @@ STIG is a way for anyone to test-drive the TIG stack (telegraf/influxbd/grafana)
 ## Usage
 Getting started is simple:
  
+ * Clone this repo to your local machine
+
+```
+git clone https://github.com/m82labs/stig.git
+```
+
  * Create a new user on all boxes you would like to monitor:
 
  ```
